@@ -18,7 +18,9 @@ function get_data(action, data_list) {
         .then(action => {
             var data = action.result;
             for (var id in data) {
-                data_list.push(data[id])
+                if (data[id] != null) {
+                    data_list.push(data[id])
+                }
             }
         })
         .catch(error => console.error(error));
@@ -32,10 +34,6 @@ const get_ids = {
     }
 };
 
-var ids = [];
-get_data(get_ids, ids);
-console.log(ids)
-
 var get_items = {
     "action": "get_items",
     "params": {
@@ -43,9 +41,24 @@ var get_items = {
     }
 };
 
+var get_brands = {
+    "action": "get_fields",
+    "params": {
+        "field": "brand",
+        "offset": 3,
+        "limit": 5
+    }
+};
+
+var ids = [];
+get_data(get_ids, ids);
+console.log(ids);
+
+var brands = [];
+get_data(get_brands, brands);
+console.log(brands);
+
 var items = [];
-if (ids.length > 0) {
-    get_data(get_items, items);
-    console.log(items)
-}
+get_data(get_items, items);
+console.log(items)
 
