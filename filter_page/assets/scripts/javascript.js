@@ -1,7 +1,3 @@
-async function init() {
-    
-}
-
 async function get_data(action) {
     const request = new Request(url, {
         method: "POST",
@@ -49,6 +45,14 @@ async function renderProducts(products) {
     });
 }
 
+function createIdObject(offset, limit) {
+    const object = {
+        "action": "get_ids",
+        "params": { "offset": offset, "limit": limit }
+    };
+    return object;
+}
+
 function createItemObject(ids) {
     const items = {
         "action": "get_items",
@@ -78,42 +82,22 @@ function createFilterObject() {
     return filter;
 }
 
-filterButton.addEventListener('click', async () => {
-    try {
-        const filter = createFilterObject();
-        const filteredIds = await get_data(filter);
-
-        const pageSize = 10;
-        const numPages = Math.ceil(filteredIds.length / pageSize);
-        let currentPage = 1;
-
-        const item = createItemObject(filteredIds.slice(0, pageSize));
-        const filteredItems = await get_data(item);
-        renderProducts(filteredItems);
-
-        nextPageButton.addEventListener('click', async () => {
-                currentPage++;
-                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
-                const filteredItems = await get_data(item);
-                renderProducts(filteredItems);
-        });
-
-        prevPageButton.addEventListener('click', async () => {
-                currentPage--;
-                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
-                const filteredItems = await get_data(item);
-                renderProducts(filteredItems);
-        });
-    } catch (error) {
-        console.error(error);
-        alert('Произошла ошибка. Проверьте консоль');
-    }
-});
+async function init() {
+    const object = createIdObject(1, pageSize);
+    const ids = await get_data(object);
+    const items = createItemObject(ids);
+    const products = await get_data(items);
+    console.log(products);
+    // renderProducts(items);
+    // console.log(items.length);
+}
 
 const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
 const hash = md5(`${'Valantis'}_${stamp}`);
 const url = 'http://api.valantis.store:40000/';
+
+const pageSize = 50;
 
 const productsContainer = document.getElementById('products');
 const paginationContainer = document.getElementById('pagination');
@@ -127,3 +111,34 @@ const filterBrandInput = document.getElementById('brand-filter');
 const filterButton = document.getElementById('filter-button');
 
 init()
+
+filterButton.addEventListener('click', async () => {
+    try {
+        const filter = createFilterObject();
+        const filteredIds = await get_data(filter);
+
+        const numPages = Math.ceil(filteredIds.length / pageSize);
+        let currentPage = 1;
+
+        const item = createItemObject(filteredIds.slice(0, pageSize));
+        const filteredItems = await get_data(item);
+        renderProducts(filteredItems);
+
+        nextPageButton.addEventListener('click', async () => {
+            currentPage++;
+            const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+            const filteredItems = await get_data(item);
+            renderProducts(filteredItems);
+        });
+
+        prevPageButton.addEventListener('click', async () => {
+            currentPage--;
+            const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+            const filteredItems = await get_data(item);
+            renderProducts(filteredItems);
+        });
+    } catch (error) {
+        console.error(error);
+        alert('Произошла ошибка. Проверьте консоль');
+    }
+});
