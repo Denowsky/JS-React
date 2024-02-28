@@ -1,4 +1,4 @@
-async function get_data(action) {
+async function getData(action) {
     const request = new Request(url, {
         method: "POST",
         body: JSON.stringify(action),
@@ -82,14 +82,58 @@ function createFilterObject() {
     return filter;
 }
 
-async function init() {
-    const object = createIdObject(1, pageSize);
-    const ids = await get_data(object);
+function removeAllDup(list) {
+    const uniqueList = [];
+    const dictKeys = new Set();
+    for (const dict of list) {
+        if (!dictKeys.has(dict.id)) {
+            dictKeys.add(dict.id);
+            uniqueList.push(dict);
+        }
+    }
+    return uniqueList;
+}
+
+async function loadPageProducts(page) {
+    const infelicity = pageSize + 10;
+    let offset = new Number;
+    if (page == 1) {
+        offset = 1;
+    }
+    else {
+        offset = page * pageSize;
+    }
+    const object = createIdObject(offset, infelicity);
+    const ids = await getData(object);
     const items = createItemObject(ids);
-    const products = await get_data(items);
-    console.log(products);
-    // renderProducts(items);
-    // console.log(items.length);
+    const products = await getData(items);
+    const uniqProducts = removeAllDup(products);
+    renderProducts(uniqProducts.slice(0, pageSize));
+}
+
+async function init() {
+    try {
+        let currentPage = 1;
+        loadPageProducts(currentPage);
+        nextPageButton.addEventListener('click', async () => {
+            if (!isFiltered) {
+                currentPage++;
+                loadPageProducts(currentPage);
+                console.log('next page')
+            }
+        });
+
+        prevPageButton.addEventListener('click', async () => {
+            if (!isFiltered && currentPage > 1) {
+                currentPage--;
+                loadPageProducts(currentPage);
+                console.log('previous page')
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        alert('Произошла ошибка. Проверьте консоль');
+    }
 }
 
 const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
@@ -108,37 +152,52 @@ const currentPageSpan = document.getElementById('current-page');
 const filterNameInput = document.getElementById('name-filter');
 const filterPriceInput = document.getElementById('price-filter');
 const filterBrandInput = document.getElementById('brand-filter');
-const filterButton = document.getElementById('filter-button');
+const filterButton = document.getElementById('filter-button-submit');
+const filterButtonDrop = document.getElementById('filter-button-drop');
+
+let isFiltered = false;
 
 init()
 
 filterButton.addEventListener('click', async () => {
     try {
+        isFiltered = true;
         const filter = createFilterObject();
-        const filteredIds = await get_data(filter);
+        const filteredIds = await getData(filter);
 
         const numPages = Math.ceil(filteredIds.length / pageSize);
         let currentPage = 1;
 
         const item = createItemObject(filteredIds.slice(0, pageSize));
-        const filteredItems = await get_data(item);
+        const filteredItems = await getData(item);
         renderProducts(filteredItems);
 
         nextPageButton.addEventListener('click', async () => {
-            currentPage++;
-            const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
-            const filteredItems = await get_data(item);
-            renderProducts(filteredItems);
+            if (isFiltered) {
+                currentPage++;
+                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+                const filteredItems = await getData(item);
+                renderProducts(filteredItems);
+                console.log('filter next page')
+            }
         });
 
         prevPageButton.addEventListener('click', async () => {
-            currentPage--;
-            const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
-            const filteredItems = await get_data(item);
-            renderProducts(filteredItems);
+            if (isFiltered && currentPage > 1) {
+                currentPage--;
+                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+                const filteredItems = await getData(item);
+                renderProducts(filteredItems);
+                console.log('filter prev page')
+            }
         });
     } catch (error) {
         console.error(error);
         alert('Произошла ошибка. Проверьте консоль');
     }
+});
+
+filterButtonDrop.addEventListener('click', async () => {
+    init()
+    isFiltered = false;
 });
