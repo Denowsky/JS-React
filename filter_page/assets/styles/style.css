@@ -18,17 +18,14 @@ p {
 
 .header-zero {
     max-width: 100vw;
-    --pad: min(calc(14 / 340 * 100vw), 14px);
+    --pad: min(calc(14 / 340* 100vw), 14px);
     position: fixed;
     background: #fff;
     z-index: 9999;
     border-bottom: 1px solid #e3e5ee;
     width: 100%;
-    padding: var(--pad)0;
-    display: grid;
-    place-items: center;
-    grid-template-areas: "Logo . Icon1 . Icon2 . Icon3 . Icon4 . Icon5 . Burger";
-    transition: transform linear 100ms;
+    padding: 10px;
+    display: flex;
 }
 
 .category__section {
@@ -48,7 +45,8 @@ p {
 }
 
 .form-input-box {
-    width: 100px;
+    width: 200px;
+    border-radius: 10px;
 }
 
 .products {
@@ -60,6 +58,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 5px;
 }
 
 .product-list {
@@ -96,4 +95,24 @@ p {
 
 .prodict-price {
     width: 100px;
+}
+
+button {
+    z-index: 2;
+    color: #cf182a;
+    font-family: Circe;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #cf182a;
+    padding: 8px;
+    width: 200px;
+    display: grid;
+    place-items: center;
+    transition: background 255ms, color 255ms;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #cf182a;
+    color: #fff;
 }

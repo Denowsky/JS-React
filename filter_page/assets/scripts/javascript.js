@@ -18,16 +18,6 @@ async function getData(action) {
     }
 }
 
-async function append_options(options) {
-    const brandFilter = document.getElementById('brand-filter');
-    options.forEach(brand => {
-        const option = document.createElement('option');
-        option.value = brand;
-        option.textContent = brand;
-        brandFilter.appendChild(option);
-    });
-}
-
 async function renderProducts(products) {
     productsContainer.innerHTML = '';
 
@@ -200,4 +190,7 @@ filterButton.addEventListener('click', async () => {
 filterButtonDrop.addEventListener('click', async () => {
     init()
     isFiltered = false;
+    filterNameInput.value = "";
+    filterPriceInput.value = "";
+    filterBrandInput.value = "";
 });

@@ -54,9 +54,7 @@
         <div class="filter-form" id="filter">
             <input class="form-input-box" type="text" id="name-filter" placeholder="Название">
             <input class="form-input-box" type="number" id="price-filter" placeholder="Цена">
-            <select class="form-input-box" id="brand-filter" name="brand">
-                <option value="">Все бренды</option>
-            </select>
+            <input class="form-input-box" type="text" id="brand-filter" placeholder="Бренд">
             <button id="filter-button-submit">Применить</button>
             <button id="filter-button-drop">Сбросить</button>
         </div>
@@ -67,7 +65,7 @@
             </ol>
         </div>
 
-        <div id="pagination">
+        <div class="pagination" id="pagination">
             <button id="prev-page">Назад</button>
             <span id="current-page"></span>
             <button id="next-page">Вперед</button>
