@@ -7,7 +7,7 @@ html {
     line-height: 1.15;
     font-family: "Noto Sans", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 100;
+    font-weight: 300;
     font-style: normal;
 }
 
@@ -37,19 +37,8 @@ p {
     text-align: center;
 }
 
-table,
-th,
-td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 5px;
-}
-
 .filter-form {
+    padding-top: 30px;
     display: flex;
     gap: 10px;
     flex-wrap: nowrap;
@@ -59,7 +48,11 @@ td {
 }
 
 .form-input-box {
-    width: 150px;
+    width: 100px;
+}
+
+.products {
+    padding-top: 30px;
 }
 
 .pagination {
@@ -69,18 +62,38 @@ td {
     align-items: center;
 }
 
-.pagination a {
-    padding: 5px 10px;
-    border: 1px solid black;
-    text-decoration: none;
-    margin: 0 5px;
+.product-list {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
-.pagination a:hover {
-    background-color: lightgray;
+.product-div{
+    border: solid;
+    border-bottom-color: black;
+    border-width: thin;
+    padding: 10px;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
-.pagination .active {
-    background-color: black;
-    color: white;
+.prodict-id {
+    width: 250px;
+}
+
+.prodict-name {
+    width: 250px;
+}
+
+.prodict-brand {
+    width: 100px;
+}
+
+.prodict-price {
+    width: 100px;
 }

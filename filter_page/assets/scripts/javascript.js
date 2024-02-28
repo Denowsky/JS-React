@@ -1,14 +1,8 @@
 async function init() {
-    await get_data(get_ids, ids);
-    await get_data(get_brands, brands);
-    await get_data(get_items, items);
-    await append_options(brands)
-    console.log(ids);
-    console.log(brands);
-    console.log(items);
+    
 }
 
-async function get_data(action, data_list) {
+async function get_data(action) {
     const request = new Request(url, {
         method: "POST",
         body: JSON.stringify(action),
@@ -22,12 +16,7 @@ async function get_data(action, data_list) {
         const response = await fetch(request);
         const action = await response.json();
         const data = action.result;
-
-        for (const id in data) {
-            if (data[id] != null) {
-                data_list.push(data[id]);
-            }
-        }
+        return data;
     } catch (error) {
         console.error(error);
     }
@@ -40,41 +29,101 @@ async function append_options(options) {
         option.value = brand;
         option.textContent = brand;
         brandFilter.appendChild(option);
-        console.log(brand);
     });
 }
+
+async function renderProducts(products) {
+    productsContainer.innerHTML = '';
+
+    products.forEach(product => {
+        const li = document.createElement('li');
+        li.className = 'product-list';
+        li.innerHTML = `
+        <div class="product-div prodict-id">${product.id}</div>
+        <div class="product-div prodict-name">${product.product}</div>
+        <div class="product-div prodict-brand">${product.brand}</div>
+        <div class="product-div prodict-price">${product.price}</div>
+      `;
+
+        productsContainer.appendChild(li);
+    });
+}
+
+function createItemObject(ids) {
+    const items = {
+        "action": "get_items",
+        "params": { "ids": ids }
+    };
+    return items;
+}
+
+function createFilterObject() {
+    const filter = {
+        action: 'filter',
+        params: {},
+    };
+
+    if (filterNameInput.value !== '') {
+        filter.params['product'] = filterNameInput.value;
+    }
+
+    if (filterBrandInput.value !== '') {
+        filter.params['brand'] = filterBrandInput.value;
+    }
+
+    if (filterPriceInput.value !== '') {
+        filter.params['price'] = Number(filterPriceInput.value);
+    }
+
+    return filter;
+}
+
+filterButton.addEventListener('click', async () => {
+    try {
+        const filter = createFilterObject();
+        const filteredIds = await get_data(filter);
+
+        const pageSize = 10;
+        const numPages = Math.ceil(filteredIds.length / pageSize);
+        let currentPage = 1;
+
+        const item = createItemObject(filteredIds.slice(0, pageSize));
+        const filteredItems = await get_data(item);
+        renderProducts(filteredItems);
+
+        nextPageButton.addEventListener('click', async () => {
+                currentPage++;
+                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+                const filteredItems = await get_data(item);
+                renderProducts(filteredItems);
+        });
+
+        prevPageButton.addEventListener('click', async () => {
+                currentPage--;
+                const item = createItemObject(filteredIds.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+                const filteredItems = await get_data(item);
+                renderProducts(filteredItems);
+        });
+    } catch (error) {
+        console.error(error);
+        alert('Произошла ошибка. Проверьте консоль');
+    }
+});
 
 const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
 const hash = md5(`${'Valantis'}_${stamp}`);
 const url = 'http://api.valantis.store:40000/';
 
-var ids = [];
-var get_ids = {
-    "action": "get_ids",
-    "params": {
-        "offset": 1,
-        "limit": 10
-    }
-};
+const productsContainer = document.getElementById('products');
+const paginationContainer = document.getElementById('pagination');
+const prevPageButton = document.getElementById('prev-page');
+const nextPageButton = document.getElementById('next-page');
+const currentPageSpan = document.getElementById('current-page');
 
-var brands = [];
-var get_brands = {
-    "action": "get_fields",
-    "params": {
-        "field": "brand",
-        "offset": 1,
-        "limit": 10
-    }
-};
-
-var items = [];
-var get_items = {
-    "action": "get_items",
-    "params": { "ids": ids }
-};
-
-let currentPage = 1;
-const productsPerPage = 50;
+const filterNameInput = document.getElementById('name-filter');
+const filterPriceInput = document.getElementById('price-filter');
+const filterBrandInput = document.getElementById('brand-filter');
+const filterButton = document.getElementById('filter-button');
 
 init()

@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <script src="../node_modules/blueimp-md5/js/md5.js"></script>
-    <script src="./assets/scripts/javascript.js"></script>
     <link rel="stylesheet" href="./assets/styles/style.css">
 </head>
 
@@ -51,24 +50,29 @@
     </div>
     <div class="category__section">
         <h1>Список товаров</h1>
-
-        <form id="filter-form" class="filter-form">
-            <input class="form-input-box" type="text" name="name" placeholder="Название">
-            <input class="form-input-box" type="number" name="price" placeholder="Цена">
-            <select class="form-input-box" id="brand-filter">
+        
+        <div class="filter-form" id="filter">
+            <input class="form-input-box" type="text" id="name-filter" placeholder="Название">
+            <input class="form-input-box" type="number" id="price-filter" placeholder="Цена">
+            <select class="form-input-box" id="brand-filter" name="brand">
                 <option value="">Все бренды</option>
             </select>
-            <input type="submit" value="Применить" class="sub-button">
-        </form>
-
-        <div id="products"></div>
-
-        <div class="pagination">
-            <a href="#" id="prev-page">Предыдущая</a>
-            <a href="#" id="next-page">Следующая</a>
+            <button id="filter-button">Применить</button>
         </div>
 
+        <div class="products" id="products">
+            <ol>
+                <!-- Здесь будет выводиться список товаров -->
+            </ol>
+        </div>
+
+        <div id="pagination">
+            <button id="prev-page">Назад</button>
+            <span id="current-page"></span>
+            <button id="next-page">Вперед</button>
+        </div>
     </div>
 </body>
+<script src="./assets/scripts/javascript.js"></script>
 
 </html>
