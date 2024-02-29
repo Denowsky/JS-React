@@ -15,6 +15,7 @@ async function getData(action) {
         return data;
     } catch (error) {
         console.error(error);
+        alert("Произошла ошибка. Обновите страницу.")
     }
 }
 

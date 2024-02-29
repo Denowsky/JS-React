@@ -50,19 +50,21 @@
     </div>
     <div class="category__section">
         <h1>Список товаров</h1>
-        
         <div class="filter-form" id="filter">
             <input class="form-input-box" type="text" id="name-filter" placeholder="Название">
             <input class="form-input-box" type="number" id="price-filter" placeholder="Цена">
             <input class="form-input-box" type="text" id="brand-filter" placeholder="Бренд">
-            <button id="filter-button-submit">Применить</button>
+            <button id="filter-button-submit">Применить фильтр</button>
             <button id="filter-button-drop">Сбросить</button>
         </div>
-
+        <div class="products-head">
+            <div class="product-div prodict-id">ID</div>
+            <div class="product-div prodict-name">Название</div>
+            <div class="product-div prodict-brand">Бренд</div>
+            <div class="product-div prodict-price">Цена</div>
+        </div>
         <div class="products" id="products">
-            <ol>
-                <!-- Здесь будет выводиться список товаров -->
-            </ol>
+
         </div>
 
         <div class="pagination" id="pagination">

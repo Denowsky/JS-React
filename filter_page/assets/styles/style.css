@@ -49,8 +49,13 @@ p {
     border-radius: 10px;
 }
 
-.products {
+.products-head {
     padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .pagination {
