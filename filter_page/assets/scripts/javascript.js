@@ -130,7 +130,7 @@ async function init() {
 const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
 const hash = md5(`${'Valantis'}_${stamp}`);
-const url = 'http://api.valantis.store:40000/';
+const url = 'https://api.valantis.store:41000/';
 
 const pageSize = 50;
 
